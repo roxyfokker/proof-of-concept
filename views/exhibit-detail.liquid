@@ -85,7 +85,7 @@
 
     <article>
         {% for section in sections %}
-            <section id="{{ section.slug }}">
+            <section id="#{{ section.exhibit }}">
 
                 <h2>{{ section.title }}</h2>
                 <p>{{ section.summary }}</p>
@@ -114,21 +114,23 @@
             <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
             <button>Start quiz</button>
         </form>
-        {% if attempt_id %}
+        {% if completed %}
+            <p>Je score is {{ score }} / {{ totalQuestions }} </p>
+        {% elsif attempt_id %}
             <form action="/quiz-answer" method="POST">
                 <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
                 <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
                 <input type="hidden" name="exhibit_id" value="{{ exhibit.id }}">
                 {% for question in questions %}
-                <fieldset>
+                <fieldset class="quiz-vraag">
                     <legend>{{ question.question }}</legend>
                     {% for option in question.options %}
-                        <label class="btn btn--secondary">
+                        <label>
                             <input type="radio" name="question_{{ question.id }}_answer" value="{{ option.key }}">
                             <span>{{ option.key }}</span> {{ option.answer }}
                         </label>
                     {% endfor %}
-                    <a href="#{{ section.slug }}">Lees de bijbehorende tekst</a>
+                    <a href="#{{ question.exhibit_section }}">Lees de bijbehorende tekst</a>
                 </fieldset>
                 {% endfor %}
                 <button type="submit">Bereken mijn score / Bekijk resulaten</button>

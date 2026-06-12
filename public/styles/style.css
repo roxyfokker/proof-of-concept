@@ -663,3 +663,22 @@ footer {
         background-color: var(--color-neutral-darker);
     }
 }
+
+
+/*=====================-timeline-======================*/
+.quiz-vraag{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    legend{
+        font-weight: bold;
+    }
+    a{
+        text-decoration: underline;
+    }
+}
+
+.nav-menu{
+    z-index: 100;
+}

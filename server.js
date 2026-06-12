@@ -47,7 +47,10 @@ app.get('/exhibit/:slug', async function (request, response) {
     exhibit,
     sections,
     questions,
-    attempt_id: request.query.attempt_id
+    attempt_id: request.query.attempt_id,
+    completed: request.query.completed,
+    score: request.query.score,
+    totalQuestions: request.query.total
   })
 })
 
@@ -75,7 +78,7 @@ app.post('/quiz-answer', async function (request, response) {
   const questions = questionsFetchResponseJSON.data
   let score = 0
 
-  // dit snap ik nog niet 100%
+  // niet van mij dit snap ik nog niet 100%
   // for elke vraag in questions kijkt hij naar de de optie die dezelfde key heeft als de gekozen antwoord en dan kijkt hij of deze iscorrect truee heeft 
   for (const question of questions) {
     const chosenKey = request.body[`question_${question.id}_answer`]
@@ -107,8 +110,12 @@ app.post('/quiz-answer', async function (request, response) {
     })
   })
 
-  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}#quiz`)
+  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}&completed=true&score=${score}&total=${questions.length}#quiz`)
 });
+
+app.get('/niet-beschikbaar', async function (request, response) {
+  response.render('partials/niet-beschikbaar.liquid')
+})
 
 app.set('port', process.env.PORT || 8000)
 

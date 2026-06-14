@@ -664,21 +664,50 @@ footer {
     }
 }
 
-
-/*=====================-timeline-======================*/
-.quiz-vraag{
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    legend{
-        font-weight: bold;
+/*-----------------Inohud------------------*/
+.table-of-content{
+    h2{
+        color: var(--color-accent);
+        text-transform: uppercase;
+        font-size: var(--font-size-body-2xl);
     }
-    a{
-        text-decoration: underline;
-    }
-}
+    nav{
+        ol{
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            li{
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-md);
+                &::before{
+                    content: "";
+                    height: 1rem;aspect-ratio: 1/1;
+                    border-radius: var(--border-radius-circle);
+                    border: var(--border-width-md) solid var(--color-secondary);
+                }
+                
+                &.active{
+                    color: var(--color-accent);
+                    font-weight: var(--font-weight-bold);
+                    &::before{
+                        background-color: var(--color-accent);
+                        border-color: var(--color-brand);
+                    }
+                }
 
-.nav-menu{
-    z-index: 100;
+                a{
+                    text-decoration: none;
+                    background-image: linear-gradient(currentColor, currentColor);
+                    background-size: 0% 2px;
+                    background-repeat: no-repeat;
+                    background-position: left bottom;
+                    transition: background-size 0.3s ease;
+                    &:hover{
+                        background-size: 100% 2px;
+                    }
+                }
+            }
+        }
+    }
 }

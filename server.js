@@ -48,9 +48,15 @@ app.get('/exhibit/:slug', async function (request, response) {
   const attemptsFetchResponseJSON = await attemptsFetchResponse.json()
   const attempts = attemptsFetchResponseJSON.data
 
+  // section en question - koppelen dit is niet van mij snap ik nog niet 100%
+  const sectionsWithQuestions = sections.map(section => ({
+    ...section,
+    question: questions.find(linkedQuestion => linkedQuestion.exhibit_section === section.id) ?? null
+  }))
   
   return response.render('exhibit-detail.liquid', { 
     exhibit,
+    sectionsWithQuestions,
     sections,
     questions,
     attempt_id: request.query.attempt_id,

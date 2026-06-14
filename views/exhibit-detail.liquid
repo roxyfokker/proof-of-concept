@@ -84,6 +84,38 @@
             </ol>
         </nav>
     </aside>
+
+    <article class="timeline">
+        {% for section in sections %}
+            <section id="{{ section.slug }}">
+                <p>{{ section.start_year }} - {{ section.end_year }}</p>
+                <h2>{{ section.title }}</h2>
+                <p>{{ section.summary }}</p>
+
+                {% if section.cover %}
+                    <div class="img-wrapper img-wrapper--fit">
+                        <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32">
+                            <path fill="currentColor" d="M16 12.44a3.565 3.565 0 0 1 3.566 3.566A3.565 3.565 0 0 1 16 19.572a3.565 3.565 0 0 1-3.566-3.566A3.565 3.565 0 0 1 16 12.439Zm-1.553 11.375L16 32l1.553-8.185 4.567 6.968-1.695-8.157 6.888 4.687-4.692-6.888 8.162 1.695-6.974-4.567L32 16l-8.19-1.553 6.973-4.567-8.162 1.695 4.692-6.888-6.888 4.687 1.695-8.157-4.567 6.968L16 0l-1.553 8.185L9.88 1.217l1.695 8.157-6.888-4.687 4.692 6.888L1.217 9.88l6.974 4.567L0 16l8.19 1.553-6.973 4.567 8.162-1.695-4.692 6.888 6.888-4.687-1.695 8.157 4.567-6.968Z"/>
+                        </svg>
+                        {% render 'partials/picture.liquid',
+                            image_src: section.cover,
+                            alt_text: section.title,
+                            width: 800,
+                            height: 600,
+                            sizes: "(max-width: 600px) 400px, 800px",
+                            loading_type: 'lazy'
+                        %}
+                    </div>
+                {% endif %}
+
+            </section>
+        {% endfor %}
+    </article>
+
+    {% assign sectionId = question.exhibit_section | append: '' %}
+    {% assign linkedSection = sections | where: 'id', sectionId | first %}
+
+
 </section>
 
 

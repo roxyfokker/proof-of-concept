@@ -19,9 +19,16 @@
 .img-wrapper{
     position: relative;
 }
-
 .img-wrapper--fit{
     width: fit-content;
+   
+    img{
+        object-fit: cover;
+        scale: 1.02;
+        aspect-ratio: 4/3;
+        height: 100%;
+        width: 100%;
+    }
 }
 .img-wrapper--hero{
     width: 100%;
@@ -34,7 +41,6 @@
     width: 3.5rem;
     height: 3.5rem;
 }
-
 @media (prefers-reduced-motion: no-preference) {
     .spinner {
         animation: spin 1s linear infinite;
@@ -648,11 +654,8 @@ footer {
         font-size: var(--font-size-body-md);
     }
 }
-
-/*=====================-timeline-======================*/
-
-.timeline{
-    &::before {
+main{
+    &::after {
         content: "";
         display: block;
         width: 100%;
@@ -662,6 +665,15 @@ footer {
         background-size: 3.2rem;
         background-color: var(--color-neutral-darker);
     }
+}
+/*=====================-timeline-======================*/
+
+.timeline-article{
+    background-color: var(--color-secondary);
+    color: var(--color-brand);
+    margin-left: var(--spacing-lg);
+    margin-right: var(--spacing-lg);
+    padding: var(--spacing-lg);
 }
 
 /*-----------------Inohud------------------*/

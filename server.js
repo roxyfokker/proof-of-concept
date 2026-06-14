@@ -86,18 +86,25 @@ app.post('/quiz-answer', async function (request, response) {
 
   const isCorrect = question.options.find(option => option.key === request.body.chosen_option)?.is_correct === true
 
-  await fetch(quizAnswersUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      attempt: attemptId,
-      question: request.body.question_id,
-      chosen_option: request.body.chosen_option,
-      answered_at: new Date(),
-      is_correct: isCorrect
-    })
-  })
+  const existingAnswerFetchResponse = await fetch(`${quizAnswersUrl}?filter[attempt][_eq]=${attemptId}&filter[question][_eq]=${request.body.question_id}`)
+  const existingAnswerFetchResponseJSON = await existingAnswerFetchResponse.json()
+  const existingAnswer = existingAnswerFetchResponseJSON.data[0]
 
+
+  if (!existingAnswer) {
+    await fetch(quizAnswersUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        attempt: attemptId,
+        question: request.body.question_id,
+        chosen_option: request.body.chosen_option,
+        answered_at: new Date(),
+        is_correct: isCorrect
+      })
+    })
+  }
+  
   response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}&correct=${isCorrect}#${request.body.section_slug}`)
 });
 

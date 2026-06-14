@@ -99,7 +99,7 @@
   </aside>
 
   <article class="timeline-article">
-    {% for section in sections %}
+    {% for section in sectionsWithQuestions %}
         <section class="timeline-article-section" id="{{ section.slug }}">
             <p class="year">
             {{ section.start_year }}
@@ -148,6 +148,32 @@
             {% endif %}
             {% endfor %}
         </section>
+
+        {% if section.question %}
+            <section class="question-card">
+                <form action="/quiz-answer" method="POST">
+                    <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
+                    <input type="hidden" name="exhibit_id" value="{{ exhibit.id }}">
+                    <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
+                    <input type="hidden" name="question_id" value="{{ section.question.id }}">
+                    <input type="hidden" name="section_slug" value="{{ section.slug }}">
+
+                    <fieldset>
+                        <legend>{{ section.question.question }}</legend>
+                        {% for option in section.question.options %}
+                        <label>
+                            <input type="radio" name="chosen_option" value="{{ option.key }}">
+                            <span>{{ option.key }}</span> {{ option.answer }}
+                        </label>
+                        {% endfor %}
+                    </fieldset>
+                    <button type="submit">Controleer antwoord</button>
+                </form>
+                
+            </section>
+        {% endif %}
+
+
     {% endfor %}
   </article>
 

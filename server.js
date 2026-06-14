@@ -56,8 +56,7 @@ app.get('/exhibit/:slug', async function (request, response) {
   
   return response.render('exhibit-detail.liquid', { 
     exhibit,
-    sectionsWithQuestions,
-    sections,
+    sectionsWithQuestions, 
     questions,
     attempt_id: request.query.attempt_id,
     completed: request.query.completed,
@@ -66,63 +65,41 @@ app.get('/exhibit/:slug', async function (request, response) {
   })
 })
 
-app.post('/quiz-attempt', async function (request, response) {
-  const attemptFetchResponse = await fetch('https://fdnd-agency.directus.app/items/teylers_museum_quiz_attempts',{
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      exhibit: request.body.exhibit_id,
-      started_at: new Date()
-    })
-  })
-  const attemptFetchResponseJSON = await attemptFetchResponse.json()
-  const attempt = attemptFetchResponseJSON.data
-
-  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attempt.id}#quiz`)
-});
-
 app.post('/quiz-answer', async function (request, response) {
-  const attemptId = request.body.attempt_id
+  let attemptId = request.body.attempt_id
 
-  // haal alle vragen op van huidige exhibit haal alle velden op dus ook options
-  const questionsFetchResponse = await fetch(`${quizQuestionsUrl}?filter[exhibit][_eq]=${request.body.exhibit_id}&fields=*`)
-  const questionsFetchResponseJSON = await questionsFetchResponse.json()
-  const questions = questionsFetchResponseJSON.data
-  let score = 0
-
-  // niet van mij snap het wel
-  // for elke vraag in questions kijkt hij naar de de optie die dezelfde key heeft als de gekozen antwoord en dan kijkt hij of deze iscorrect truee heeft 
-  for (const question of questions) {
-    const chosenKey = request.body[`question_${question.id}_answer`]
-    if (!chosenKey) continue
-    const isCorrect = question.options.find(option => option.key === chosenKey)?.is_correct === true
-
-    if (isCorrect) score = score + 1
-
-    await fetch('https://fdnd-agency.directus.app/items/teylers_museum_quiz_answers', {
+  if (!attemptId) {
+    const attemptFetchResponse = await fetch('https://fdnd-agency.directus.app/items/teylers_museum_quiz_attempts',{
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        attempt: attemptId,
-        question: question.id,
-        chosen_option: chosenKey,
-        answered_at: new Date(),
-        is_correct: isCorrect
+        exhibit: request.body.exhibit_id,
+        started_at: new Date()
       })
     })
+    const attemptFetchResponseJSON = await attemptFetchResponse.json()
+    attemptId = attemptFetchResponseJSON.data.id
   }
+    
+  const questionFetchResponse = await fetch(`${quizQuestionsUrl}/${request.body.question_id}?fields=*`)
+  const questionFetchResponseJSON = await questionFetchResponse.json()
+  const question = questionFetchResponseJSON.data
 
-  await fetch(`https://fdnd-agency.directus.app/items/teylers_museum_quiz_attempts/${attemptId}`, {
-    method: 'PATCH',
+  const isCorrect = question.options.find(option => option.key === request.body.chosen_option)?.is_correct === true
+
+  await fetch(quizAnswersUrl, {
+    method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      completed_at: new Date(),
-      total_questions: questions.length,
-      score: score
+      attempt: attemptId,
+      question: request.body.question_id,
+      chosen_option: request.body.chosen_option,
+      answered_at: new Date(),
+      is_correct: isCorrect
     })
   })
 
-  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}&completed=true&score=${score}&total=${questions.length}#quiz`)
+  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}&correct=${isCorrect}#${request.body.section_slug}`)
 });
 
 app.get('/niet-beschikbaar', async function (request, response) {

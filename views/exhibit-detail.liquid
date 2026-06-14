@@ -75,7 +75,14 @@
 
 <section>
     <aside>
-        
+        <h2>inhoud</h2>
+        <nav>
+            <ol>
+                {% for section in sections %}
+                    <li><a href="#{{ section.slug }}">{{ section.title }}</a></li>
+                {% endfor %}
+            </ol>
+        </nav>
     </aside>
 </section>
 

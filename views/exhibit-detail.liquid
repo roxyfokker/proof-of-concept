@@ -89,7 +89,7 @@
     <h3>inhoud</h3>
     <nav>
       <ol>
-        {% for section in sections %}
+        {% for section in sectionsWithQuestions %}
           <li>
             <a href="#{{ section.slug }}">{{ section.title }}</a>
           </li>
@@ -169,84 +169,19 @@
                     </fieldset>
                     <button type="submit">Controleer antwoord</button>
                 </form>
-                
             </section>
         {% endif %}
-
-
     {% endfor %}
+    {% if attempt_id %}
+        <form action="/quiz-submit" method="POST">
+            <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
+            <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
+            <button type="submit">Bekijk mijn score</button>
+        </form>
+    {% endif %}
   </article>
 
     
 </section>
-
-{% comment %}
-  <section class="timeline">
-
-
-      <aside>
-          <ol>
-              {% for section in sections %}
-              <li><a href="#{{ section.slug }}">{{ section.title }}</a></li>
-              {% endfor %}
-          </ol>
-      </aside>
-
-      <article>
-          {% for section in sections %}
-              <section id="{{ section.slug }}">
-
-                  <h2>{{ section.title }}</h2>
-                  <p>{{ section.summary }}</p>
-
-                  {% if section.cover %}
-                      <div class="img-wrapper img-wrapper--fit">
-                          <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32">
-                              <path fill="currentColor" d="M16 12.44a3.565 3.565 0 0 1 3.566 3.566A3.565 3.565 0 0 1 16 19.572a3.565 3.565 0 0 1-3.566-3.566A3.565 3.565 0 0 1 16 12.439Zm-1.553 11.375L16 32l1.553-8.185 4.567 6.968-1.695-8.157 6.888 4.687-4.692-6.888 8.162 1.695-6.974-4.567L32 16l-8.19-1.553 6.973-4.567-8.162 1.695 4.692-6.888-6.888 4.687 1.695-8.157-4.567 6.968L16 0l-1.553 8.185L9.88 1.217l1.695 8.157-6.888-4.687 4.692 6.888L1.217 9.88l6.974 4.567L0 16l8.19 1.553-6.973 4.567 8.162-1.695-4.692 6.888 6.888-4.687-1.695 8.157 4.567-6.968Z"/>
-                          </svg>
-                          {% render 'partials/picture.liquid',
-                              image_src: section.cover,
-                              alt_text: section.title,
-                              width: 800,
-                              height: 600
-                          %}
-                      </div>
-                  {% endif %}
-
-              </section>
-          {% endfor %}
-      </article>
-
-      <section id="quiz">
-          <form action="/quiz-attempt" method="POST">
-              <input type="hidden" name="exhibit_id" value="{{ exhibit.id }}">
-              <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
-              <button>Start quiz</button>
-          </form>
-          {% if completed %}
-              <p>Je score is {{ attempt.score }} / {{ totalQuestions }} </p>
-          {% elsif attempt_id %}
-              <form action="/quiz-answer" method="POST">
-                  <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
-                  <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
-                  <input type="hidden" name="exhibit_id" value="{{ exhibit.id }}">
-                  {% for question in questions %}
-                  <fieldset class="quiz-vraag">
-                      <legend>{{ question.question }}</legend>
-                      {% for option in question.options %}
-                          <label>
-                              <input type="radio" name="question_{{ question.id }}_answer" value="{{ option.key }}">
-                              <span>{{ option.key }}</span> {{ option.answer }}
-                          </label>
-                      {% endfor %}
-                      <a href="#section-{{ question.exhibit_section }}">Lees de bijbehorende tekst</a>
-                  </fieldset>
-                  {% endfor %}
-                  <button type="submit">Bereken mijn score / Bekijk resulaten</button>
-              </form>
-          {% endif %}
-      </section>
-  </section>
-{% endcomment %}
 
 {% endblock %}

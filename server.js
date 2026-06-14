@@ -57,11 +57,10 @@ app.get('/exhibit/:slug', async function (request, response) {
   return response.render('exhibit-detail.liquid', { 
     exhibit,
     sectionsWithQuestions, 
-    questions,
     attempt_id: request.query.attempt_id,
     completed: request.query.completed,
     score: request.query.score,
-    totalQuestions: request.query.total
+    correct: request.query.correct
   })
 })
 
@@ -101,6 +100,25 @@ app.post('/quiz-answer', async function (request, response) {
 
   response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}&correct=${isCorrect}#${request.body.section_slug}`)
 });
+
+app.post('/quiz-submit', async function (request, response) {
+  const answersFetchResponse = await fetch(`${quizAnswersUrl}?filter[attempt][_eq]=${request.body.attempt_id}`)
+  const answersFetchResponseJSON = await answersFetchResponse.json()
+  const answers = answersFetchResponseJSON.data
+
+  const score = answers.filter(answer => answer.is_correct).length
+
+  await fetch(`${quizAttemptsUrl}/${request.body.attempt_id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      completed_at: new Date(),
+      score: score,
+      total_questions: answers.length
+    })
+  })
+  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${request.body.attempt_id}&completed=true&score=${score}`)
+})
 
 app.get('/niet-beschikbaar', async function (request, response) {
   response.render('partials/niet-beschikbaar.liquid')

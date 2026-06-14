@@ -75,7 +75,7 @@
 
 <section class="timeline">
     <aside class="table-of-content">
-        <h2>inhoud</h2>
+        <h3>inhoud</h3>
         <nav>
             <ol>
                 {% for section in sections %}
@@ -85,12 +85,20 @@
         </nav>
     </aside>
 
-    <article class="timeline">
+    <article class="timeline-article">
         {% for section in sections %}
             <section id="{{ section.slug }}">
                 <p>{{ section.start_year }} - {{ section.end_year }}</p>
                 <h2>{{ section.title }}</h2>
                 <p>{{ section.summary }}</p>
+
+                {% for block in section.content_blocks %}
+                    {% if block.block_type == 'paragraph' %}
+                        <p>{{ block.text }}</p>
+                    {% elsif block.block_type == 'quote' %}
+                        <blockquote>{{ block.text }}</blockquote>
+                    {% endif %}
+                {% endfor %}
 
                 {% if section.cover %}
                     <div class="img-wrapper img-wrapper--fit">

@@ -27,6 +27,7 @@ app.get('/', async function (request, response) {
 })
 
 app.get('/exhibit/:slug', async function (request, response) {
+ 
   // exhibits ophalen
   const exhibitFetchResponse = await fetch(`${exhibitUrl}?filter[slug][_eq]=${request.params.slug}&fields=*,creators.teylers_museum_persons_id.*`)
   const exhibitFetchResponseJSON = await exhibitFetchResponse.json()
@@ -42,8 +43,13 @@ app.get('/exhibit/:slug', async function (request, response) {
   const questionsFetchResponseJSON = await questionsFetchResponse.json()
   const questions = questionsFetchResponseJSON.data
 
+  // attempts ophalen
+  const attemptsFetchResponse = await fetch(`${quizAttemptsUrl}?filter[exhibit][_eq]=${exhibit.id}`)
+  const attemptsFetchResponseJSON = await attemptsFetchResponse.json()
+  const attempts = attemptsFetchResponseJSON.data
+
   
-  response.render('exhibit-detail.liquid', { 
+  return response.render('exhibit-detail.liquid', { 
     exhibit,
     sections,
     questions,
@@ -78,7 +84,7 @@ app.post('/quiz-answer', async function (request, response) {
   const questions = questionsFetchResponseJSON.data
   let score = 0
 
-  // niet van mij dit snap ik nog niet 100%
+  // niet van mij snap het wel
   // for elke vraag in questions kijkt hij naar de de optie die dezelfde key heeft als de gekozen antwoord en dan kijkt hij of deze iscorrect truee heeft 
   for (const question of questions) {
     const chosenKey = request.body[`question_${question.id}_answer`]

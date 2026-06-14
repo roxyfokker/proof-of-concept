@@ -2,7 +2,6 @@
 const nav = document.getElementById('navigatie')
 const link = document.querySelector('.nav-toggle')
 const sluit = document.querySelector('.nav-close')
-const ul = nav.querySelector('ul')
 
 link.addEventListener('click', function (e) {
     e.preventDefault()
@@ -29,7 +28,7 @@ document.addEventListener('keydown', function (e) {
     }
 })
 
-// spinner loading state - dit snap ik nog niet 
+// spinner loading state - niet van mij dit snap ik nog niet 
 document.querySelectorAll('.img-wrapper').forEach(wrapper => {
     const img = wrapper.querySelector('img');
     const spinner = wrapper.querySelector('.spinner');

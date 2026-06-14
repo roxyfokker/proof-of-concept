@@ -20,7 +20,6 @@
     </section>
     
     <article class="exhibit">
-
         <aside class="exhibit-sidebar">
             <section class="exhibit-intro">
                 <p class="exhibit-period">{{ exhibit.period }}</p>
@@ -73,7 +72,17 @@
     </article>
 </main>
 
+
+<section>
+    <aside>
+        
+    </aside>
+</section>
+
+
+{% comment %}
 <section class="timeline">
+
         
     <aside>
         <ol>
@@ -85,7 +94,7 @@
 
     <article>
         {% for section in sections %}
-            <section id="#{{ section.exhibit }}">
+            <section id="{{ section.slug }}">
 
                 <h2>{{ section.title }}</h2>
                 <p>{{ section.summary }}</p>
@@ -115,7 +124,7 @@
             <button>Start quiz</button>
         </form>
         {% if completed %}
-            <p>Je score is {{ score }} / {{ totalQuestions }} </p>
+            <p>Je score is {{ attempt.score }} / {{ totalQuestions }} </p>
         {% elsif attempt_id %}
             <form action="/quiz-answer" method="POST">
                 <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
@@ -130,7 +139,7 @@
                             <span>{{ option.key }}</span> {{ option.answer }}
                         </label>
                     {% endfor %}
-                    <a href="#{{ question.exhibit_section }}">Lees de bijbehorende tekst</a>
+                    <a href="#section-{{ question.exhibit_section }}">Lees de bijbehorende tekst</a>
                 </fieldset>
                 {% endfor %}
                 <button type="submit">Bereken mijn score / Bekijk resulaten</button>
@@ -138,5 +147,7 @@
         {% endif %}
     </section> 
 </section>
+
+{% endcomment %}
 
 {% endblock %}

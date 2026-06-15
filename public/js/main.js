@@ -42,12 +42,11 @@ document.querySelectorAll('.img-wrapper').forEach(wrapper => {
 });
 
 // form button
+document.querySelectorAll('form').forEach(form => {
+  const button = form.querySelector('.quiz-answer-btn')
+  button.disabled = true
 
-const button = document.querySelector('.quiz-answer-btn')
-button.disabled = true
-
-document.querySelectorAll('.option-input').forEach(input => {
-  input.addEventListener('change', () => {
-    button.disabled = false
+  form.querySelectorAll('.option-input').forEach(input => {
+    input.addEventListener('change', () => button.disabled = false)
   })
 })

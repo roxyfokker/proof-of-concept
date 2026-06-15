@@ -40,3 +40,14 @@ document.querySelectorAll('.img-wrapper').forEach(wrapper => {
         img?.addEventListener('load', remove);
     }
 });
+
+// form button
+
+const button = document.querySelector('.quiz-answer-btn')
+button.disabled = true
+
+document.querySelectorAll('.option-input').forEach(input => {
+  input.addEventListener('change', () => {
+    button.disabled = false
+  })
+})

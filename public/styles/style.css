@@ -779,6 +779,93 @@ main{
         }
     }
 }
-.quiz-question{
-    background-color: red;
+.question-card{
+    padding: var(--spacing-md);
+    h3{
+        color: var(--color-accent);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+
+        &::before,
+        &::after {
+            content: "";
+            height: 0.05rem;
+            flex: 1;
+            background: var(--color-accent);
+        }
+    }
+    form{
+        padding: var(--spacing-sm);
+        fieldset{
+            border: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            .option{
+                display: flex;
+                align-items: center;
+                border: solid var(--color-secondary) var(--border-width-sm);
+                font-size: var(--font-size-body-md);
+                .option-input{
+                    appearance: none; 
+                }
+                .option-key{
+                    background-color: var(--color-secondary);
+                    color: var(--color-brand);
+                    padding: var(--spacing-md);
+                    align-self: stretch;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 1rem;
+                    font-size: var(--font-size-body-xl);
+                    font-weight: var(--font-weight-bold);
+                }
+                .option-answer {
+                    padding: var(--spacing-md) 0;
+                }
+                &:hover{
+                    cursor: pointer;
+                    border: solid var(--color-accent) var(--border-width-sm);
+                }
+                &:has(.option-input:checked) {
+                    border-color: var(--color-accent);
+
+                    .option-key {
+                        background-color: var(--color-accent);
+                    }
+
+                    .option-answer {
+                        color: var(--color-accent);
+                    }
+                }
+                &.active{
+                    border: solid var(--color-accent) var(--border-width-sm);
+
+                    .option-key{
+                        background-color: var(--color-accent);
+                    }
+                    .option-answer{
+                        color: var(--color-accent);
+                    }
+                }
+            }
+            legend{
+                font-weight: var(--font-weight-bold);
+                font-size: var(--font-size-body-xl);
+                letter-spacing: var(--letter-spacing-wide);
+                margin-bottom: var(--spacing-xl);
+            }
+        }
+        button{
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-body-md);
+        }
+    }
 }

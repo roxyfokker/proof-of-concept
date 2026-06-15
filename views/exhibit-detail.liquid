@@ -151,6 +151,7 @@
 
         {% if section.question %}
             <section class="question-card">
+                <h3>Quiz vraag</h3>
                 <form action="/quiz-answer" method="POST">
                     <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
                     <input type="hidden" name="exhibit_id" value="{{ exhibit.id }}">
@@ -161,13 +162,14 @@
                     <fieldset>
                         <legend>{{ section.question.question }}</legend>
                         {% for option in section.question.options %}
-                        <label>
-                            <input type="radio" name="chosen_option" value="{{ option.key }}">
-                            <span>{{ option.key }}</span> {{ option.answer }}
+                        <label class="option">
+                            <input type="radio" name="chosen_option" value="{{ option.key }}" class="option-input" {% if forloop.first %}required{% endif %}>
+                            <span class="option-key">{{ option.key }}</span> 
+                            <span class="option-answer">{{ option.answer }}</span>
                         </label>
                         {% endfor %}
                     </fieldset>
-                    <button type="submit">Controleer antwoord</button>
+                    <button class="btn btn--primary quiz-answer-btn" type="submit">Controleer antwoord</button>
                 </form>
             </section>
         {% endif %}
@@ -180,8 +182,6 @@
         </form>
     {% endif %}
   </article>
-
-    
 </section>
 
 {% endblock %}

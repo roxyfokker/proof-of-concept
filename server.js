@@ -27,7 +27,6 @@ app.get('/', async function (request, response) {
 })
 
 app.get('/exhibit/:slug', async function (request, response) {
-  console.log('attempt_id:', request.query.attempt_id)
  
   // exhibits ophalen
   const exhibitFetchResponse = await fetch(`${exhibitUrl}?filter[slug][_eq]=${request.params.slug}&fields=*,creators.teylers_museum_persons_id.*`)
@@ -50,17 +49,9 @@ app.get('/exhibit/:slug', async function (request, response) {
     question: questions.find(linkedQuestion => linkedQuestion.exhibit_section === section.id) ?? null
   }))
 
-  let answers = []
-  if (request.query.attempt_id) {
-    const answersFetchResponse = await fetch(`${quizAnswersUrl}?filter[attempt][_eq]=${request.query.attempt_id}`)
-    const answersFetchResponseJSON = await answersFetchResponse.json()
-    answers = answersFetchResponseJSON.data
-  }
-
-  console.log('answers:', answers)
-  console.log('answers url:', `${quizAnswersUrl}?filter[attempt][_eq]=${request.query.attempt_id}`)
-  console.log('attempt_id type:', typeof request.query.attempt_id, request.query.attempt_id)
-  console.log('attempt_id:', request.query.attempt_id, 'url:', request.url)
+  const answersFetchResponse = await fetch(`${quizAnswersUrl}?filter[attempt][_eq]=${request.query.attempt_id}`)
+  const answersFetchResponseJSON = await answersFetchResponse.json()
+  const answers = answersFetchResponseJSON.data
 
   return response.render('exhibit-detail.liquid', { 
     exhibit,
@@ -112,7 +103,6 @@ app.post('/quiz-answer', async function (request, response) {
       })
     })
   }
-  console.log('redirect:', `/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}#${request.body.section_slug}-quiz`)
   response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}#${request.body.section_slug}-quiz`)
 });
 

@@ -41,26 +41,20 @@ app.get('/exhibit/:slug', async function (request, response) {
   // questions ophalen ophalen gesorteerd op exhibit section 
   const questionsFetchResponse = await fetch(`${quizQuestionsUrl}?filter[exhibit][_eq]=${exhibit.id}&fields=*&sort=exhibit_section`)
   const questionsFetchResponseJSON = await questionsFetchResponse.json()
-  const questions = questionsFetchResponseJSON.data
-
-  // attempts ophalen
-  const attemptsFetchResponse = await fetch(`${quizAttemptsUrl}?filter[exhibit][_eq]=${exhibit.id}`)
-  const attemptsFetchResponseJSON = await attemptsFetchResponse.json()
-  const attempts = attemptsFetchResponseJSON.data
+  const questions = questionsFetchResponseJSON.data  
 
   // section en question - koppelen dit is niet van mij snap ik nog niet 100%
   const sectionsWithQuestions = sections.map(section => ({
     ...section,
     question: questions.find(linkedQuestion => linkedQuestion.exhibit_section === section.id) ?? null
   }))
-  
+
   return response.render('exhibit-detail.liquid', { 
     exhibit,
     sectionsWithQuestions, 
     attempt_id: request.query.attempt_id,
     completed: request.query.completed,
     score: request.query.score,
-    correct: request.query.correct
   })
 })
 
@@ -105,7 +99,7 @@ app.post('/quiz-answer', async function (request, response) {
     })
   }
   
-  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}&correct=${isCorrect}#${request.body.section_slug}`)
+  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}#${request.body.section_slug}-quiz`)
 });
 
 app.post('/quiz-submit', async function (request, response) {

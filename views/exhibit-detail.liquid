@@ -97,7 +97,6 @@
       </ol>
     </nav>
   </aside>
-
   <article class="timeline-article">
     {% for section in sectionsWithQuestions %}
         <section class="timeline-article-section" id="{{ section.slug }}">
@@ -148,9 +147,8 @@
             {% endif %}
             {% endfor %}
         </section>
-
         {% if section.question %}
-            <section class="question-card">
+            <section id="{{ section.slug }}-quiz" class="question-card" data-enhanced="quiz-{{ section.question.id }}">
                 <h3>Quiz vraag</h3>
                 <form action="/quiz-answer" method="POST">
                     <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
@@ -170,6 +168,7 @@
                         {% endfor %}
                     </fieldset>
                     <button class="btn btn--primary quiz-answer-btn" type="submit">Controleer antwoord</button>
+
                 </form>
             </section>
         {% endif %}

@@ -868,4 +868,20 @@ main{
             font-size: var(--font-size-body-md);
         }
     }
+    /*form feedback*/
+    form{
+        .option--correct{
+            border: solid var(--color-accent) var(--border-width-sm);
+            .option-key{
+                background-color: var(--color-accent);
+                
+            }
+        }
+        .option--wrong{
+            border: solid var(--color-error) var(--border-width-sm);
+            .option-key{
+                background-color: var(--color-error);
+            }
+        }
+    }
 }

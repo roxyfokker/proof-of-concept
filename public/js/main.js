@@ -41,7 +41,7 @@ document.querySelectorAll('.img-wrapper').forEach(wrapper => {
     }
 });
 
-// form button
+// form button per vraag disables erafhlaen 
 document.querySelectorAll('form').forEach(form => {
   const button = form.querySelector('.quiz-answer-btn')
   button.disabled = true
@@ -50,3 +50,4 @@ document.querySelectorAll('form').forEach(form => {
     input.addEventListener('change', () => button.disabled = false)
   })
 })
+

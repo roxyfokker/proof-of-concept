@@ -99,88 +99,183 @@
   </aside>
   <article class="timeline-article">
     {% for section in sectionsWithQuestions %}
-        <section class="timeline-article-section" id="{{ section.slug }}">
-            <p class="year">
-            {{ section.start_year }}
-            {% if section.end_year %} - {{ section.end_year }} {% endif %}
-            </p>
-            <h2>{{ section.title }}</h2>
-            <p class="summary">{{ section.summary }}</p>
+      <section class="timeline-article-section" id="{{ section.slug }}">
+        <p class="year">
+          {{ section.start_year }}
+          {% if section.end_year %} - {{ section.end_year }} {% endif %}
+        </p>
+        <h2>{{ section.title }}</h2>
+        <p class="summary">{{ section.summary }}</p>
 
-            {% if section.cover %}
-            <div class="img-wrapper img-wrapper--fit">
-                <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32">
-                <path fill="currentColor" d="M16 12.44a3.565 3.565 0 0 1 3.566 3.566A3.565 3.565 0 0 1 16 19.572a3.565 3.565 0 0 1-3.566-3.566A3.565 3.565 0 0 1 16 12.439Zm-1.553 11.375L16 32l1.553-8.185 4.567 6.968-1.695-8.157 6.888 4.687-4.692-6.888 8.162 1.695-6.974-4.567L32 16l-8.19-1.553 6.973-4.567-8.162 1.695 4.692-6.888-6.888 4.687 1.695-8.157-4.567 6.968L16 0l-1.553 8.185L9.88 1.217l1.695 8.157-6.888-4.687 4.692 6.888L1.217 9.88l6.974 4.567L0 16l8.19 1.553-6.973 4.567 8.162-1.695-4.692 6.888 6.888-4.687-1.695 8.157 4.567-6.968Z"/>
-                </svg>
-                {% render 'partials/picture.liquid',
-                image_src: section.cover,
-                alt_text: section.title,
-                width: 800,
-                height: 600,
-                sizes: '(max-width: 600px) 400px, 800px',
-                loading_type: 'lazy'
-                %}
-            </div>
-            <p class="source">source hier komt een bron - met jaartal</p>
-            {% endif %}
+        {% if section.cover %}
+          <div class="img-wrapper img-wrapper--fit">
+            <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32">
+              <path fill="currentColor" d="M16 12.44a3.565 3.565 0 0 1 3.566 3.566A3.565 3.565 0 0 1 16 19.572a3.565 3.565 0 0 1-3.566-3.566A3.565 3.565 0 0 1 16 12.439Zm-1.553 11.375L16 32l1.553-8.185 4.567 6.968-1.695-8.157 6.888 4.687-4.692-6.888 8.162 1.695-6.974-4.567L32 16l-8.19-1.553 6.973-4.567-8.162 1.695 4.692-6.888-6.888 4.687 1.695-8.157-4.567 6.968L16 0l-1.553 8.185L9.88 1.217l1.695 8.157-6.888-4.687 4.692 6.888L1.217 9.88l6.974 4.567L0 16l8.19 1.553-6.973 4.567 8.162-1.695-4.692 6.888 6.888-4.687-1.695 8.157 4.567-6.968Z"/>
+            </svg>
+            {% render 'partials/picture.liquid',
+              image_src: section.cover,
+              alt_text: section.title,
+              width: 800,
+              height: 600,
+              sizes: '(max-width: 600px) 400px, 800px',
+              loading_type: 'lazy'
+            %}
+          </div>
+          <p class="source">source hier komt een bron - met jaartal</p>
+        {% endif %}
 
-            {% for block in section.content_blocks %}
-            {% if block.block_type == 'paragraph' %}
-                <p>{{ block.text }}</p>
-            {% elsif block.block_type == 'quote' %}
-                {% assign quoteText = block.text | split: '"' %}
-                <blockquote>
-                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 21V14C3 9.02944 6.47715 5 11 5V7C8.23858 7 6 9.68629 6 13V14H9V21H3ZM13 21V14C13 9.02944 16.4772 5 21 5V7C18.2386 7 16 9.68629 16 13V14H19V21H13Z" fill="#FFCC00"/>
-                </svg>
-                <div class="quote">
-                    {% if quoteText[1] %}
-                    <q>{{ quoteText[1] }}</q>
-                    {%- if quoteText[2] != blank -%}
-                        <cite>{{ quoteText[2] | strip }}</cite>
-                    {% endif %}
-                    {% else %}
-                    <q>{{ block.text }}</q>
-                    {% endif %}
-                </div>
-                </blockquote>
+        {% for block in section.content_blocks %}
+          {% if block.block_type == 'paragraph' %}
+            <p>{{ block.text }}</p>
+          {% elsif block.block_type == 'quote' %}
+            {% assign quoteText = block.text | split: '"' %}
+            <blockquote>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 21V14C3 9.02944 6.47715 5 11 5V7C8.23858 7 6 9.68629 6 13V14H9V21H3ZM13 21V14C13 9.02944 16.4772 5 21 5V7C18.2386 7 16 9.68629 16 13V14H19V21H13Z" fill="#FFCC00"/>
+              </svg>
+              <div class="quote">
+                {% if quoteText[1] %}
+                  <q>{{ quoteText[1] }}</q>
+                  {%- if quoteText[2] != blank -%}
+                    <cite>{{ quoteText[2] | strip }}</cite>
+                  {% endif %}
+                {% else %}
+                  <q>{{ block.text }}</q>
+                {% endif %}
+              </div>
+            </blockquote>
+          {% endif %}
+        {% endfor %}
+      </section>
+
+      {% if section.question %}
+            {% assign section_answer = false %}
+            {% for answer in answers %}
+            {% if answer.question == section.question.id %}
+                {% assign section_answer = answer %}
+                {% break %}
             {% endif %}
             {% endfor %}
+
+        <section id="{{ section.slug }}-quiz" class="question-card" data-enhanced="quiz-{{ section.question.id }}">
+          <h3>Quiz vraag</h3>
+          <form action="/quiz-answer" method="POST" data-enhanced="quiz-{{ section.question.id }}">
+            <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
+            <input type="hidden" name="exhibit_id" value="{{ exhibit.id }}">
+            <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
+            <input type="hidden" name="question_id" value="{{ section.question.id }}">
+            <input type="hidden" name="section_slug" value="{{ section.slug }}">
+
+            <fieldset>
+              <legend>{{ section.question.question }}</legend>
+
+              {% for option in section.question.options %}
+                <label class="option
+                    {% if section_answer %}
+                        {% if option.key == section_answer.chosen_option %}
+                            {% if section_answer.is_correct %}
+                            option--correct
+                            {% else %}
+                            option--wrong
+                            {% endif %}
+                        {% elsif option.is_correct == true %}
+                            option--correct
+                        {% endif %}
+                    {% endif %}
+                    ">
+                  <input type="radio" name="chosen_option" value="{{ option.key }}" class="option-input"{% if forloop.first %}required{% endif %}>
+                  <span class="option-key">{{ option.key }}</span>
+                  <span class="option-answer">{{ option.answer }}</span>
+                </label>
+              {% endfor %}
+            </fieldset>
+            {% if section_answer %}
+                {% if section_answer.is_correct %}
+                    <p>{{ section.question.explanation_correct }}</p>
+                {% else %}
+                    <p>{{ section.question.explanation_wrong }}</p>
+                {% endif %}
+            {% endif %}
+            <button class="btn btn--primary quiz-answer-btn" type="submit">Controleer antwoord</button>
+          </form>
         </section>
-        {% if section.question %}
-            <section id="{{ section.slug }}-quiz" class="question-card" data-enhanced="quiz-{{ section.question.id }}">
-                <h3>Quiz vraag</h3>
-                <form action="/quiz-answer" method="POST">
-                    <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
-                    <input type="hidden" name="exhibit_id" value="{{ exhibit.id }}">
-                    <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
-                    <input type="hidden" name="question_id" value="{{ section.question.id }}">
-                    <input type="hidden" name="section_slug" value="{{ section.slug }}">
-
-                    <fieldset>
-                        <legend>{{ section.question.question }}</legend>
-                        {% for option in section.question.options %}
-                        <label class="option">
-                            <input type="radio" name="chosen_option" value="{{ option.key }}" class="option-input" {% if forloop.first %}required{% endif %}>
-                            <span class="option-key">{{ option.key }}</span> 
-                            <span class="option-answer">{{ option.answer }}</span>
-                        </label>
-                        {% endfor %}
-                    </fieldset>
-                    <button class="btn btn--primary quiz-answer-btn" type="submit">Controleer antwoord</button>
-
-                </form>
-            </section>
-        {% endif %}
+      {% endif %}
     {% endfor %}
     {% if attempt_id %}
-        <form action="/quiz-submit" method="POST">
-            <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
-            <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
-            <button type="submit">Bekijk mijn score</button>
-        </form>
+      <form action="/quiz-submit" method="POST">
+        <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
+        <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
+        <button type="submit">Bekijk mijn score</button>
+      </form>
     {% endif %}
   </article>
 </section>
+
+<script type="module">
+    /*
+        Client-side script voor enhancement
+        type="module" is een feature detection,
+        browsers die dat ondersteunen, ondersteunen ook fetch (en andere js methoden) 
+        https://snugug.com/musings/modern-cutting-the-mustard/
+    */
+
+    // Als er ergens op de pagina een formulier wordt gesubmit..
+    // (We maken hier gebruik van Event Delegation)
+    document.addEventListener('submit', async function (event) {
+
+        // Hou in een variabele bij welk formulier dat was
+        const form = event.target;
+
+        // Als dit formulier geen data-enhanced attribuut heeft, doe dan niks speciaals (laat het formulier normaal versturen)
+        // Dit doen we, zodat we sommige formulieren op de pagina kunnen 'enhancen'
+        // Door ze bijvoorbeeld data-enhanced="true" of data-enhanced="formulier-3" te geven.
+        // Data attributen mag je zelf verzinnen: https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Solve_HTML_problems/Use_data_attributes
+        if (!form.hasAttribute('data-enhanced')) return;
+
+        // Voorkom de standaard submit van de browser
+        // Let op: hiermee overschrijven we de default Loading state van de browser...
+        event.preventDefault();
+
+        // Verzamel alle formuliervelden van het formulier
+        let formData = new FormData(form);
+
+        // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
+        // Gebruik daarvoor het action en method attribuut van het originele formulier
+        // Inclusief alle formuliervelden
+        const response = await fetch(form.action, {
+            method: form.method,
+            body: new URLSearchParams(formData),
+            redirect: 'follow'
+        });
+
+        console.log('response url:', response.url)
+
+        // De server redirect op de normale manier, en geeft HTML terug
+        // (De server weet niet eens dat deze fetch via client-side JavaScript gebeurde)
+        const responseText = await response.text();
+
+        // Normaal zou de browser die HTML parsen en weergeven, maar daar moeten we nu zelf iets mee
+        // Parse de nieuwe HTML en maak onderwater een nieuw Document Object Model aan
+        const parser = new DOMParser();
+        const responseDOM = parser.parseFromString(responseText, 'text/html');
+
+        // Zoek in de onderwater DOM de nieuwe UI state op
+        // We gebruiken hiervoor het eerdere data-enhanced attribuut, zodat we weten waar we naar moeten zoeken
+        // In de nieuwe HTML zoeken we bijvoorbeeld naar data-enhanced="true" of data-enhanced="formulier-3"
+        // (Hierdoor kunnen we ook meerdere formulieren op dezelfde pagina gebruiken)
+        const newState = responseDOM.querySelector('[data-enhanced="' + form.getAttribute('data-enhanced') + '"]');
+        console.log('zoek naar:', '[data-enhanced="' + form.getAttribute('data-enhanced') + '"]')
+        console.log('newState:', newState)
+        console.log('newState innerHTML:', newState.innerHTML)
+        // Overschrijf ons formulier met de nieuwe HTML
+        // Hier wil je waarschijnlijk de Loading state vervangen door een Success state
+        const currentCard = document.querySelector('[data-enhanced="' + form.getAttribute('data-enhanced') + '"]');
+        currentCard.replaceWith(newState);
+
+        console.log('currentCard:', currentCard)
+
+    });
+
+</script>
 
 {% endblock %}

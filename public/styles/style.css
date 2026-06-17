@@ -667,8 +667,6 @@ main{
     }
 }
 /*=====================-timeline-======================*/
-
-
 /*-----------------Inohud------------------*/
 .table-of-content{
     display: flex;
@@ -900,7 +898,14 @@ main{
         
     }
 }
-
+/*disabled als nog niet is */
+@supports selector(:has(*)) {
+  .question-card .answer-form:not(:has(input[type="radio"]:checked)) button[type="submit"] {
+    background-color: color-mix(in srgb, var(--color-accent) 50%, transparent);
+    border-color:     color-mix(in srgb, var(--color-accent) 50%, transparent);
+    pointer-events:   none;
+  }
+}
 /*-----------------quiz results------------------*/
 .submit-form{
     display: flex;
@@ -962,6 +967,7 @@ main{
         padding: var(--spacing-sm);
     }
 }
+
 /*
 werkt niet snap er niks van
 

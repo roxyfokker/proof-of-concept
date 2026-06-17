@@ -913,6 +913,9 @@ main{
     text-align: center;
     margin-bottom: var(--spacing-2xl);
 }
+.quiz-results--hidden {
+  display: none;
+}
 .quiz-results{
     border: solid var(--color-accent) var(--border-width-md);
     padding: var(--spacing-md);

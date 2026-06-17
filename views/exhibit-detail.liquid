@@ -210,6 +210,8 @@
               </section>
             {% endif %}
 
+            <p class="hint"><a href="#{{ section.slug }}">hier vind je het antwoord</a></p>
+
             {% unless section_answer %}
               <button class="btn btn--primary quiz-answer-btn" type="submit">Controleer antwoord</button>
             {% endunless %}
@@ -233,49 +235,94 @@
       </button>
     </form>
 
-      <section class="quiz-results {% unless completed == 'true' %}quiz-results--hidden{% endunless %}" id="quiz-results">
-        <h3>Quiz afgerond!</h3>
+    <section class="quiz-results {% unless completed == 'true' %}quiz-results--hidden{% endunless %}" id="quiz-results">
+      <h3>Quiz afgerond!</h3>
 
-        <div class="score">
-          {% assign percentageCorrect = totalCorrect | times: 100.0 | divided_by: answeredCount | round %}
-          <label class="score-label" for="score-percentage">{{ percentageCorrect }}%</label>
-          <p class="score-description">
-            {{ totalCorrect }} van de {{ answeredCount -}}
-            <span>vragen goed beantwoord</span>
-          </p>
-          <meter
-            id="score-percentage"
-            min="0"
-            max="100"
-            low="33"
-            high="67"
-            optimum="100"
-            value="{{ percentageCorrect }}"
-          ></meter>
-        </div>
+      <div class="score">
+        {% assign percentageCorrect = totalCorrect | times: 100.0 | divided_by: answeredCount | round %}
+        <label class="score-label" for="score-percentage">{{ percentageCorrect }}%</label>
+        <p class="score-description">
+          {{ totalCorrect }} van de {{ answeredCount -}}
+          <span>vragen goed beantwoord</span>
+        </p>
+        <meter
+          id="score-percentage"
+          min="0"
+          max="100"
+          low="33"
+          high="67"
+          optimum="100"
+          value="{{ percentageCorrect }}"
+        ></meter>
+      </div>
 
-        {% if percentageCorrect < 33 %}
-          <p class="score-message">🌱 <span>Goed geprobeerd!</span> Je bent al lekker aan het oefenen.</p>
-        {% elsif percentageCorrect < 66 %}
-          <p class="score-message">😊 <span>Lekker bezig!</span> Je snapt al best veel.</p>
-        {% elsif percentageCorrect < 83 %}
-          <p class="score-message">🎉 <span>Goed gedaan!</span> Je hebt bijna alles goed, echt goed bezig.</p>
-        {% else %}
-          <p class="score-message">🏆 <span>Fantastisch!</span> Jij weet echt alles over {{ exhibit.title }}</p>
-        {% endif %}
-      </section>
+      {% if percentageCorrect < 34 %}
+        <p class="score-message">🌱 <span>Goed geprobeerd!</span> Je bent al lekker aan het oefenen.</p>
+      {% elsif percentageCorrect < 66 %}
+        <p class="score-message">😊 <span>Lekker bezig!</span> Je snapt al best veel.</p>
+      {% elsif percentageCorrect < 83 %}
+        <p class="score-message">🎉 <span>Goed gedaan!</span> Je hebt bijna alles goed, echt goed bezig.</p>
+      {% else %}
+        <p class="score-message">🏆 <span>Fantastisch!</span> Jij weet echt alles over {{ exhibit.title }}</p>
+      {% endif %}
+
+    </section>
   </article>
 </section>
 
 <script type="module">
-  let answeredCount = {{ answeredCount }}
-  const totalQuestions = {{ totalQuestions }}
-  const submitButton = document.querySelector('.submit-form button[type="submit"]')
+    let answeredCount = {{ answeredCount }}
+    const totalQuestions = {{ totalQuestions }}
+    const submitButton = document.querySelector('.submit-form button[type="submit"]')
 
-  document.addEventListener('submit', async function (event) {
+    document.addEventListener('submit', async function (event) {
+        const form = event.target
+
+        if (!form.getAttribute('data-enhanced')?.startsWith('quiz-answer-')) {
+            return
+        }
+
+        event.preventDefault()
+
+        const button = form.querySelector('button[type="submit"]')
+        button.classList.add('loading')
+        button.textContent = 'Antwoord controleren ...'
+        button.disabled = true
+
+        let formData = new FormData(form)
+
+        const response = await fetch(form.action, {
+            method: form.method,
+            body: new URLSearchParams(formData)
+        })
+
+        const responseText = await response.text()
+
+        const parser = new DOMParser()
+        const responseDOM = parser.parseFromString(responseText, 'text/html')
+
+        const newState = responseDOM.querySelector('[data-enhanced="' + form.getAttribute('data-enhanced') + '"]')
+
+        const newAttemptId = newState.querySelector('[name="attempt_id"]')?.value
+
+        if (newAttemptId) {
+            document.querySelectorAll('[name="attempt_id"]').forEach(input => input.value = newAttemptId)
+        }
+
+        form.outerHTML = newState.outerHTML
+
+        document.body.offsetHeight
+
+        answeredCount++
+        if (answeredCount >= totalQuestions) {
+            submitButton.disabled = false
+        }
+    })
+
+    document.addEventListener('submit', async function (event) {
       const form = event.target
 
-      if (!form.getAttribute('data-enhanced')?.startsWith('quiz-answer-')) {
+      if (form.getAttribute('data-enhanced') !== 'quiz-submit') {
           return
       }
 
@@ -283,71 +330,27 @@
 
       const button = form.querySelector('button[type="submit"]')
       button.classList.add('loading')
-      button.textContent = 'Antwoord controleren ...'
+      button.textContent = 'Score berekenen...'
       button.disabled = true
 
-      let formData = new FormData(form)
 
-      const response = await fetch(form.action, {
+      const formData = new FormData(form)
+
+      let response = await fetch(form.action, {
           method: form.method,
           body: new URLSearchParams(formData)
       })
+
 
       const responseText = await response.text()
 
       const parser = new DOMParser()
       const responseDOM = parser.parseFromString(responseText, 'text/html')
 
-      const newState = responseDOM.querySelector('[data-enhanced="' + form.getAttribute('data-enhanced') + '"]')
+      const quizResults = responseDOM.querySelector('#quiz-results')
 
-      const newAttemptId = newState.querySelector('[name="attempt_id"]')?.value
-
-      if (newAttemptId) {
-          document.querySelectorAll('[name="attempt_id"]').forEach(input => input.value = newAttemptId)
-      }
-
-      form.outerHTML = newState.outerHTML
-
-      document.body.offsetHeight
-
-      answeredCount++
-      if (answeredCount >= totalQuestions) {
-          submitButton.disabled = false
-      }
+      form.outerHTML = quizResults.outerHTML
   })
-
-  document.addEventListener('submit', async function (event) {
-    const form = event.target
-
-    if (form.getAttribute('data-enhanced') !== 'quiz-submit') {
-        return
-    }
-
-    event.preventDefault()
-
-    const button = form.querySelector('button[type="submit"]')
-    button.classList.add('loading')
-    button.textContent = 'Score berekenen...'
-    button.disabled = true
-
-
-    const formData = new FormData(form)
-
-    let response = await fetch(form.action, {
-        method: form.method,
-        body: new URLSearchParams(formData)
-    })
-
-
-    const responseText = await response.text()
-
-    const parser = new DOMParser()
-    const responseDOM = parser.parseFromString(responseText, 'text/html')
-
-    const quizResults = responseDOM.querySelector('#quiz-results')
-
-    form.outerHTML = quizResults.outerHTML
-})
 </script>
 
 {% endblock %}

@@ -1,5 +1,5 @@
 /*==================-loading state-===================*/ 
-
+/*-----------------------Picture-----------------------*/ 
 @supports selector(:has(img)) {
     picture {
         background: var(--color-secondary);
@@ -50,7 +50,7 @@
         to { rotate: 360deg; }
     }
 }
-
+/*-----------------------Button----------------------*/
 /*=====================-Header-======================*/ 
 header {
     width: 100%;
@@ -806,6 +806,20 @@ main{
                 align-items: center;
                 border: solid var(--color-secondary) var(--border-width-sm);
                 font-size: var(--font-size-body-md);
+
+                @media (prefers-reduced-motion: no-preference) {
+                    transition: border-color 0.2s ease;
+                    .option-key {
+                        transition: background-color 0.2s ease;
+                    }
+                }
+                &:hover{
+                    cursor: pointer;
+                    border: solid var(--color-accent) var(--border-width-sm);
+                    .option-key{
+                        background-color: var(--color-accent);
+                    }
+                }
                 .option-input{
                     appearance: none; 
                 }
@@ -823,10 +837,6 @@ main{
                 }
                 .option-answer {
                     padding: var(--spacing-md) 0;
-                }
-                &:hover{
-                    cursor: pointer;
-                    border: solid var(--color-accent) var(--border-width-sm);
                 }
                 &:has(.option-input:checked) {
                     border-color: var(--color-accent);
@@ -855,6 +865,28 @@ main{
                 font-size: var(--font-size-body-xl);
                 letter-spacing: var(--letter-spacing-wide);
                 margin-bottom: var(--spacing-xl);
+            }
+        }
+        .hint{
+            font-size: var(--font-size-body-md);
+            padding-top: var(--spacing-sm);
+            a{
+                text-decoration: none;
+                background-image: linear-gradient(currentColor, currentColor);
+                background-size: 0% 2px;
+                background-repeat: no-repeat;
+                background-position: left bottom;
+                transition: background-size 0.3s ease;
+                &:hover{
+                    background-size: 100% 2px;
+                }
+            }
+           
+            &::before{
+                content: url('/assets/icons/hint.svg');
+                display: inline-block;
+                vertical-align: middle;
+                transform: scale(0.5);
             }
         }
         button{
@@ -889,6 +921,11 @@ main{
             padding: var(--spacing-md);
             border-left: solid var(--border-width-lg);
             margin-top: var(--spacing-md);
+            
+            @media (prefers-reduced-motion: no-preference) {
+                animation: expand .3s ease-out;
+                overflow: hidden;
+            }
             &.explanation-correct{
                 border-color: var(--color-success);
             }
@@ -899,11 +936,23 @@ main{
         
     }
 }
+@keyframes expand {
+    from {
+        height: 0;
+        padding-inline: 0;
+        opacity: 0;
+    }
+    to {
+        max-height: 20rem;
+        padding-inline: var(--spacing-md);
+        opacity: 1;
+    }
+}
 /*disabled als nog niet is */
 @supports selector(:has(*)) {
   .question-card .answer-form:not(:has(input[type="radio"]:checked)) button[type="submit"] {
-    background-color: color-mix(in srgb, var(--color-accent) 50%, transparent);
-    border-color:     color-mix(in srgb, var(--color-accent) 50%, transparent);
+    background-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    border-color:     color-mix(in srgb, var(--color-accent) 30%, transparent);
     pointer-events:   none;
   }
 }

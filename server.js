@@ -53,7 +53,8 @@ app.get('/exhibit/:slug', async function (request, response) {
   const answersFetchResponseJSON = await answersFetchResponse.json()
   const answers = answersFetchResponseJSON.data ?? []
 
-  console.log('answers length:', answers.length)
+  const totalQuestions = answers.length
+  const totalCorrect = answers.filter(answer => answer.is_correct === true).length
   
   return response.render('exhibit-detail.liquid', { 
     exhibit,
@@ -63,7 +64,9 @@ app.get('/exhibit/:slug', async function (request, response) {
     attempt_id: request.query.attempt_id,
     completed: request.query.completed,
     score: request.query.score,
-    answers
+    answers,
+    totalQuestions,
+    totalCorrect
   })
 })
 

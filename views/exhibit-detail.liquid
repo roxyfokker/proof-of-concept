@@ -211,6 +211,36 @@
         <button type="submit">Bekijk mijn score</button>
     </form>
 
+    {% if completed == "true" %}
+
+        <section>
+            <h3>Quiz afgerond!</h3>
+            
+
+            {% assign percentageCorrect = totalCorrect | times: 100.0 | divided_by: totalQuestions | round %}
+            <label for="score-percentage">{{ percentageCorrect }}%</label>
+
+            <p>{{ totalCorrect }} van de {{ totalQuestions }}<span>vragen goed beantwoord</span></p>
+
+            {% comment %} https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meter https://codepen.io/Sidopjescherm/pen/myREXaJ{% endcomment %}
+            <meter id="score-percentage" min="0" max="100" low="50" high="80" optimum="100" value="{{ percentageCorrect }}"></meter>
+
+
+            {% if percentageCorrect < 50 %}
+                🌱<span>Goed geprobeerd!</span> Je bent al lekker aan het oefenen.
+            {% elsif percentageCorrect < 70 %}
+                😊<span>Lekker bezig!</span> Je snapt al best veel.
+            {% elsif percentageCorrect < 90 %}
+                🎉<span>Goed gedaan!</span> Je hebt bijna alles goed, echt goed bezig.
+            {% else %}
+                🏆<span>Fantastisch!</span> Jij weet echt alles over {{ exhibit.title }}
+            {% endif %}           
+            
+        </section>
+
+
+    {% endif %}
+
 
 
   </article>

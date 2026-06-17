@@ -133,6 +133,7 @@ header {
     color: var(--color-brand);
     flex-direction: column;
     gap: var(--spacing-lg);
+    z-index: 999;
 }
 .nav-menu:target,
 .nav-menu.open {
@@ -909,9 +910,19 @@ main{
 /*-----------------quiz results------------------*/
 .submit-form{
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    text-align: center;
     margin-bottom: var(--spacing-2xl);
+    margin-top: var(--spacing-4xl);
+    legend{
+        text-align: center;
+        font-size: var(--font-size-body-xl);
+        padding: var(--spacing-lg);
+    }
+    button{
+        width: fit-content;
+        align-self: center;
+    }
 }
 .quiz-results--hidden {
   display: none;

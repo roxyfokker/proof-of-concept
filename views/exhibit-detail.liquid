@@ -219,6 +219,7 @@
     {% endfor %}
 
     <form action="/quiz-submit" method="POST" class="submit-form" data-enhanced="quiz-submit">
+      <legend>Alle vragen beantwoord?</legend>
       <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
       <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
       <button

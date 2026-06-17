@@ -887,3 +887,89 @@ main{
         }
     }
 }
+
+/*-----------------quiz results------------------*/
+.submit-form{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+.quiz-results{
+    border: solid var(--color-accent) var(--border-width-md);
+    padding: var(--spacing-md);
+    border-radius: 5px;
+    background-color: var(--color-neutral-dark);
+    h3 { 
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+        color: var(--color-accent);
+
+        &::before,
+        &::after {
+            content: "";
+            height: 0.05rem;
+            flex: 1;
+            background: var(--color-accent);
+        }
+    }
+    .score{
+        padding: var(--spacing-md) var(--spacing-sm);
+        display: flex;
+        flex-wrap: wrap;
+        .score-label{
+            color: var(--color-accent);
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-body-5xl);
+            width: 50%;
+        }
+        .score-description{
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            font-size: var(--font-size-body-lg);
+            font-weight: var(--font-weight-bold);
+            font-family: var(--font-secondary);
+            text-align: right;
+            
+            span{
+                font-weight: var(--font-weight-regular);
+                font-family: var(--font-primary);
+                font-size: var(--font-size-body-sm);
+            }
+        }
+        #score-percentage {
+            width: 100%;
+        }
+    }
+    .score-message{
+        font-size: var(--font-size-body-md);
+        padding: var(--spacing-sm);
+    }
+}
+/*
+werkt niet snap er niks van
+
+#score-percentage {
+    -webkit-appearance: none;
+}
+
+#score-percentage::-webkit-meter-bar {
+    background-color: blue;
+    border-radius: var(--border-width-md);
+}
+
+#score-percentage::-webkit-meter-optimum-value {
+    background-color: blue;
+}
+
+#score-percentage::-webkit-meter-suboptimum-value {
+    background-color: blue;
+}
+
+#score-percentage::-webkit-meter-even-less-good-value {
+    background-color: blue;
+}
+    */

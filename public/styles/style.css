@@ -885,6 +885,19 @@ main{
                 }
             }
         }
+        .feedback-message{
+            background-color: var(--color-neutral-darker);
+            padding: var(--spacing-md);
+            border-left: solid var(--border-width-lg);
+            margin-top: var(--spacing-md);
+            &.explanation-correct{
+                border-color: var(--color-success);
+            }
+            &.explanation-wrong{
+                border-color: var(--color-error);
+            }
+        }
+        
     }
 }
 

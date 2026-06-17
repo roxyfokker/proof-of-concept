@@ -40,3 +40,23 @@ document.querySelectorAll('.img-wrapper').forEach(wrapper => {
         img?.addEventListener('load', remove);
     }
 });
+
+
+// table of content 
+// https://benfrain.com/building-a-table-of-contents-with-active-indicator-using-javascript-intersection-observers/
+// https://css-tricks.com/a-few-functional-uses-for-intersection-observer-to-know-when-an-element-is-in-view/
+if ('IntersectionObserver' in window) {
+    const sections = document.querySelectorAll('.timeline-article-section')
+    const Links = document.querySelectorAll('.inhoud-link')
+
+    const observer = new IntersectionObserver((entries) => {
+        const intersecting = entries.find(entry => entry.isIntersecting)
+
+        if (intersecting) {
+            Links.forEach(link => link.classList.remove('current'))
+            document.querySelector(`.inhoud-link[href="#${intersecting.target.id}"]`)?.classList.add('current')
+        }
+    }, { threshold: 0.3 },{ rootMargin: "0px 0px -200px 0px"})
+
+    sections.forEach(section => observer.observe(section))
+}

@@ -687,14 +687,7 @@ main{
             li{
                 display: flex;
                 align-items: center;
-                gap: var(--spacing-md);
                 font-size: var(--font-size-body-sm);
-                &::before{
-                    content: "";
-                    height: 1rem;aspect-ratio: 1/1;
-                    border-radius: var(--border-radius-circle);
-                    border: var(--border-width-md) solid var(--color-secondary);
-                }
                 
                 &.active{
                     color: var(--color-accent);
@@ -712,8 +705,22 @@ main{
                     background-repeat: no-repeat;
                     background-position: left bottom;
                     transition: background-size 0.3s ease;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    &::before{
+                        content: "";
+                        margin-right: var(--spacing-sm);
+                        height: 1rem;
+                        aspect-ratio: 1/1;
+                        border-radius: var(--border-radius-circle);
+                        border: var(--border-width-md) solid var(--color-secondary);
+                    }
                     &:hover{
                         background-size: 100% 2px;
+                    }
+                    &.current{
+                        color: var(--color-accent);
                     }
                 }
             }
@@ -721,6 +728,17 @@ main{
     }
 }
 /*-----------------article------------------*/
+.timeline{
+    @media (min-width: 900px){
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        .table-of-content{
+            position: sticky;
+            top: 1rem;
+            align-self: start;
+        }
+    }
+}
 .timeline-article{
     margin-left: var(--spacing-lg);
     margin-right: var(--spacing-lg);
@@ -956,6 +974,7 @@ main{
     pointer-events:   none;
   }
 }
+
 /*-----------------quiz results------------------*/
 .submit-form{
     display: flex;

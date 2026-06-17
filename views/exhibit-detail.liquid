@@ -148,42 +148,52 @@
         {% endfor %}
       </section>
 
-      {% if section.question %}
-            {% assign section_answer = false %}
-            {% for answer in answers %}
-            {% if answer.question == section.question.id %}
-                {% assign section_answer = answer %}
-                {% break %}
-            {% endif %}
-            {% endfor %}
+      {% for question in section.questions %}
+        {% assign section_answer = false %}
+        {% for answer in answers %}
+          {% if answer.question == question.id %}
+            {% assign section_answer = answer %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
 
         <section id="{{ section.slug }}-quiz" class="question-card">
           <h3>Quiz vraag</h3>
-          <form action="/quiz-answer" method="POST" data-enhanced="quiz-{{ section.question.id }}" class="answer-form">
+          <form action="/quiz-answer" method="POST" data-enhanced="quiz-{{ question.id }}" class="answer-form">
             <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
             <input type="hidden" name="exhibit_id" value="{{ exhibit.id }}">
             <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
-            <input type="hidden" name="question_id" value="{{ section.question.id }}">
+            <input type="hidden" name="question_id" value="{{ question.id }}">
             <input type="hidden" name="section_slug" value="{{ section.slug }}">
 
             <fieldset>
-              <legend>{{ section.question.question }}</legend>
+              <legend>{{ question.question }}</legend>
 
-              {% for option in section.question.options %}
-                <label class="option
+              {% for option in question.options %}
+                <label
+                  class="
+                    option
                     {% if section_answer %}
-                        {% if option.key == section_answer.chosen_option %}
-                            {% if section_answer.is_correct %}
-                            option--correct
-                            {% else %}
-                            option--wrong
-                            {% endif %}
-                        {% elsif option.is_correct == true %}
-                            option--correct
-                        {% endif %}
+                      {% if option.key == section_answer.chosen_option %}
+                        {% if section_answer.is_correct %}option--correct{% else %}option--wrong{% endif %}
+                      {% elsif option.is_correct == true %}
+                        option--correct
+                      {% endif %}
                     {% endif %}
-                    ">
-                  <input type="radio" name="chosen_option" value="{{ option.key }}" class="option-input" {% if section_answer %}disabled{% endif %} {% if forloop.first %}required{% endif %}>
+                  "
+                >
+                  <input
+                    type="radio"
+                    name="chosen_option"
+                    value="{{ option.key }}"
+                    class="option-input"
+                    {% if section_answer %}
+                      disabled
+                    {% endif %}
+                    {% if forloop.first %}
+                      required
+                    {% endif %}
+                  >
                   <span class="option-key">{{ option.key }}</span>
                   <span class="option-answer">{{ option.answer }}</span>
                 </label>
@@ -191,44 +201,59 @@
             </fieldset>
 
             {% if section_answer %}
-              <section class="feedback-message {% if section_answer.is_correct %} explanation-correct {% else %} explanation-wrong {% endif %}">
-                  {% if section_answer.is_correct %}
-                        <p>{{ section.question.explanation_correct }}</p>
-                  {% else %}
-                      <p>{{ section.question.explanation_wrong }}</p>
-                  {% endif %}
+              <section class="feedback-message {% if section_answer.is_correct %}explanation-correct{% else %}explanation-wrong{% endif %}">
+                {% if section_answer.is_correct %}
+                  <p>{{ question.explanation_correct }}</p>
+                {% else %}
+                  <p>{{ question.explanation_wrong }}</p>
+                {% endif %}
               </section>
             {% endif %}
-            
 
             {% unless section_answer %}
-                <button class="btn btn--primary quiz-answer-btn" type="submit">Controleer antwoord</button>
+              <button class="btn btn--primary quiz-answer-btn" type="submit">Controleer antwoord</button>
             {% endunless %}
           </form>
         </section>
-      {% endif %}
+      {% endfor %}
     {% endfor %}
 
-   
     <form action="/quiz-submit" method="POST" class="submit-form">
-        <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
-        <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
-        <button type="submit" class="btn btn--primary">Bekijk mijn score</button>
+      <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
+      <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
+      <button
+        type="submit"
+        class="btn btn--primary"
+        {% if answeredCount < totalQuestions %}
+          disabled
+        {% endif %}
+      >
+        Bekijk mijn score
+      </button>
     </form>
 
-    {% if completed == "true" %}
-
+    {% if completed == 'true' %}
       <section class="quiz-results" id="quiz-results">
         <h3>Quiz afgerond!</h3>
-            
+
         <div class="score">
-          {% assign percentageCorrect = totalCorrect | times: 100.0 | divided_by: totalQuestions | round %}
+          {% assign percentageCorrect = totalCorrect | times: 100.0 | divided_by: answeredCount | round %}
           <label class="score-label" for="score-percentage">{{ percentageCorrect }}%</label>
-          <p class="score-description">{{ totalCorrect }} van de {{ totalQuestions }}<span>vragen goed beantwoord</span></p>
-          {% comment %} https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meter https://codepen.io/Sidopjescherm/pen/myREXaJ{% endcomment %}
-          <meter id="score-percentage" min="0" max="100" low="40" high="80" optimum="100" value="{{ percentageCorrect }}"></meter>
+          <p class="score-description">
+            {{ totalCorrect }} van de {{ answeredCount -}}
+            <span>vragen goed beantwoord</span>
+          </p>
+          <meter
+            id="score-percentage"
+            min="0"
+            max="100"
+            low="40"
+            high="80"
+            optimum="100"
+            value="{{ percentageCorrect }}"
+          ></meter>
         </div>
-            
+
         {% if percentageCorrect < 50 %}
           <p class="score-message">🌱 <span>Goed geprobeerd!</span> Je bent al lekker aan het oefenen.</p>
         {% elsif percentageCorrect < 70 %}
@@ -237,91 +262,61 @@
           <p class="score-message">🎉 <span>Goed gedaan!</span> Je hebt bijna alles goed, echt goed bezig.</p>
         {% else %}
           <p class="score-message">🏆 <span>Fantastisch!</span> Jij weet echt alles over {{ exhibit.title }}</p>
-        {% endif %}           
+        {% endif %}
       </section>
-
     {% endif %}
-
-
-
   </article>
 </section>
 
 <script type="module">
-    /*
-        Client-side script voor enhancement
-        type="module" is een feature detection,
-        browsers die dat ondersteunen, ondersteunen ook fetch (en andere js methoden) 
-        https://snugug.com/musings/modern-cutting-the-mustard/
-    */
+  let answeredCount = {{ answeredCount }}
+  const totalQuestions = {{ totalQuestions }}
+  const submitButton = document.querySelector('.submit-form button[type="submit"]')
 
-    // Als er ergens op de pagina een formulier wordt gesubmit..
-    // (We maken hier gebruik van Event Delegation)
-    document.addEventListener('submit', async function (event) {
+  document.addEventListener('submit', async function (event) {
+      const form = event.target
 
-        // Hou in een variabele bij welk formulier dat was
-        const form = event.target;
+      if (!form.hasAttribute('data-enhanced')) {
+          return
+      }
 
-        // Als dit formulier geen data-enhanced attribuut heeft, doe dan niks speciaals (laat het formulier normaal versturen)
-        // Dit doen we, zodat we sommige formulieren op de pagina kunnen 'enhancen'
-        // Door ze bijvoorbeeld data-enhanced="true" of data-enhanced="formulier-3" te geven.
-        // Data attributen mag je zelf verzinnen: https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Solve_HTML_problems/Use_data_attributes
-        if (!form.hasAttribute('data-enhanced')) {
-            return
-        }
+      event.preventDefault()
 
-        // Voorkom de standaard submit van de browser
-        // Let op: hiermee overschrijven we de default Loading state van de browser...
-        event.preventDefault();
+      const button = form.querySelector('button[type="submit"]')
 
-        const button = form.querySelector('button[type="submit"]')
+      button.classList.add('loading')
+      button.textContent = 'Antwoord controleren ...'
+      button.disabled = true
 
-        // Loading state
-        button.classList.add('loading')
-        button.textContent = 'Antwoord controleren ...'
-        button.disabled = true
+      let formData = new FormData(form)
 
-        // Verzamel alle formuliervelden van het formulier
-        let formData = new FormData(form);
+      const response = await fetch(form.action, {
+          method: form.method,
+          body: new URLSearchParams(formData)
+      })
 
-        // Doe een fetch naar de server, net als hoe de browser dit normaal zou doen
-        // Gebruik daarvoor het action en method attribuut van het originele formulier
-        // Inclusief alle formuliervelden
-        const response = await fetch(form.action, {
-            method: form.method,
-            body: new URLSearchParams(formData)
-        });
-        
-        // De server redirect op de normale manier, en geeft HTML terug
-        // (De server weet niet eens dat deze fetch via client-side JavaScript gebeurde)
-        const responseText = await response.text();
+      const responseText = await response.text()
 
-        // Normaal zou de browser die HTML parsen en weergeven, maar daar moeten we nu zelf iets mee
-        // Parse de nieuwe HTML en maak onderwater een nieuw Document Object Model aan
-        const parser = new DOMParser();
-        const responseDOM = parser.parseFromString(responseText, 'text/html');
+      const parser = new DOMParser()
+      const responseDOM = parser.parseFromString(responseText, 'text/html')
 
-        // Zoek in de onderwater DOM de nieuwe UI state op
-        // We gebruiken hiervoor het eerdere data-enhanced attribuut, zodat we weten waar we naar moeten zoeken
-        // In de nieuwe HTML zoeken we bijvoorbeeld naar data-enhanced="true" of data-enhanced="formulier-3"
-        // (Hierdoor kunnen we ook meerdere formulieren op dezelfde pagina gebruiken)
-        const newState = responseDOM.querySelector('[data-enhanced="' + form.getAttribute('data-enhanced') + '"]');
+      const newState = responseDOM.querySelector('[data-enhanced="' + form.getAttribute('data-enhanced') + '"]')
 
-        // Pak attempt_id uit nieuwe HTML en update alle andere forms op de pagina
-        const newAttemptId = newState.querySelector('[name="attempt_id"]')?.value
+      const newAttemptId = newState.querySelector('[name="attempt_id"]')?.value
 
-        if (newAttemptId) {
-            document.querySelectorAll('[name="attempt_id"]').forEach(input => input.value = newAttemptId)
-        }
-        
-        // Overschrijf ons formulier met de nieuwe HTML
-        // Hier wil je waarschijnlijk de Loading state vervangen door een Success state
-        form.outerHTML = newState.outerHTML
+      if (newAttemptId) {
+          document.querySelectorAll('[name="attempt_id"]').forEach(input => input.value = newAttemptId)
+      }
 
-        // forced repaint want soms werden de befoer/after van de quiz h3 niet meer getkeend 
-        document.body.offsetHeight
-    });
+      form.outerHTML = newState.outerHTML
 
+      document.body.offsetHeight
+
+      answeredCount++
+      if (answeredCount >= totalQuestions) {
+          submitButton.disabled = false
+      }
+  })
 </script>
 
 {% endblock %}

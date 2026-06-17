@@ -43,17 +43,18 @@ app.get('/exhibit/:slug', async function (request, response) {
   const questionsFetchResponseJSON = await questionsFetchResponse.json()
   const questions = questionsFetchResponseJSON.data  
 
-  // section en question - koppelen dit is niet van mij snap ik nog niet 100%
+  // section en question - koppelen dit is niet van mij snap ik nog niet
   const sectionsWithQuestions = sections.map(section => ({
     ...section,
-    question: questions.find(linkedQuestion => linkedQuestion.exhibit_section === section.id) ?? null
+    questions: questions.filter(linkedQuestion => linkedQuestion.exhibit_section === section.id)
   }))
 
   const answersFetchResponse = await fetch(`${quizAnswersUrl}?filter[attempt][_eq]=${request.query.attempt_id}`)
   const answersFetchResponseJSON = await answersFetchResponse.json()
   const answers = answersFetchResponseJSON.data ?? []
 
-  const totalQuestions = answers.length
+  const answeredCount = answers.length
+  const totalQuestions = questions.length
   const totalCorrect = answers.filter(answer => answer.is_correct === true).length
   
   return response.render('exhibit-detail.liquid', { 
@@ -65,8 +66,9 @@ app.get('/exhibit/:slug', async function (request, response) {
     completed: request.query.completed,
     score: request.query.score,
     answers,
-    totalQuestions,
-    totalCorrect
+    totalCorrect,
+    answeredCount,
+    totalQuestions
   })
 })
 

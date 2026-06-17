@@ -51,10 +51,14 @@ app.get('/exhibit/:slug', async function (request, response) {
 
   const answersFetchResponse = await fetch(`${quizAnswersUrl}?filter[attempt][_eq]=${request.query.attempt_id}`)
   const answersFetchResponseJSON = await answersFetchResponse.json()
-  const answers = answersFetchResponseJSON.data
+  const answers = answersFetchResponseJSON.data ?? []
 
+  console.log('answers length:', answers.length)
+  
   return response.render('exhibit-detail.liquid', { 
     exhibit,
+    questions,
+    sections,
     sectionsWithQuestions, 
     attempt_id: request.query.attempt_id,
     completed: request.query.completed,
@@ -103,7 +107,15 @@ app.post('/quiz-answer', async function (request, response) {
       })
     })
   }
-  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}#${request.body.section_slug}-quiz`)
+
+  // Als javascirpt werkt 
+  if (request.headers.accept.includes('application/json')) {
+     response.json({ attemptId: attemptId, isCorrect: isCorrect })
+
+  // als javascript niet werkt 
+  } else { 
+    response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${attemptId}#${request.body.section_slug}-quiz`)
+  }
 });
 
 app.post('/quiz-submit', async function (request, response) {

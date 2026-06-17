@@ -869,18 +869,20 @@ main{
         }
     }
     /*form feedback*/
-    .option{
-        &.option--correct{
-            border: solid var(--color-accent) var(--border-width-sm);
-            .option-key{
-                background-color: var(--color-accent);
-                
+    form{
+        .option{
+            &.option--correct{
+                border: solid var(--color-accent) var(--border-width-sm);
+                .option-key{
+                    background-color: var(--color-accent);
+                    
+                }
             }
-        }
-        &.option--wrong{
-            border: solid var(--color-error) var(--border-width-sm);
-            .option-key{
-                background-color: var(--color-error);
+            &.option--wrong{
+                border: solid var(--color-error) var(--border-width-sm);
+                .option-key{
+                    background-color: var(--color-error);
+                }
             }
         }
     }

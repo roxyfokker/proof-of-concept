@@ -157,7 +157,7 @@
             {% endif %}
             {% endfor %}
 
-        <section id="{{ section.slug }}-quiz" class="question-card" data-enhanced="quiz-{{ section.question.id }}">
+        <section id="{{ section.slug }}-quiz" class="question-card">
           <h3>Quiz vraag</h3>
           <form action="/quiz-answer" method="POST" data-enhanced="quiz-{{ section.question.id }}">
             <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
@@ -183,7 +183,7 @@
                         {% endif %}
                     {% endif %}
                     ">
-                  <input type="radio" name="chosen_option" value="{{ option.key }}" class="option-input"{% if forloop.first %}required{% endif %}>
+                  <input type="radio" name="chosen_option" value="{{ option.key }}" class="option-input" {% if section_answer %}disabled{% endif %} {% if forloop.first %}required{% endif %}>
                   <span class="option-key">{{ option.key }}</span>
                   <span class="option-answer">{{ option.answer }}</span>
                 </label>
@@ -196,18 +196,23 @@
                     <p>{{ section.question.explanation_wrong }}</p>
                 {% endif %}
             {% endif %}
-            <button class="btn btn--primary quiz-answer-btn" type="submit">Controleer antwoord</button>
+            {% unless section_answer %}
+                <button class="btn btn--primary quiz-answer-btn" type="submit">Controleer antwoord</button>
+            {% endunless %}
           </form>
         </section>
       {% endif %}
     {% endfor %}
-    {% if attempt_id %}
-      <form action="/quiz-submit" method="POST">
+
+   
+    <form action="/quiz-submit" method="POST">
         <input type="hidden" name="exhibit_slug" value="{{ exhibit.slug }}">
         <input type="hidden" name="attempt_id" value="{{ attempt_id }}">
         <button type="submit">Bekijk mijn score</button>
-      </form>
-    {% endif %}
+    </form>
+
+
+
   </article>
 </section>
 
@@ -230,11 +235,20 @@
         // Dit doen we, zodat we sommige formulieren op de pagina kunnen 'enhancen'
         // Door ze bijvoorbeeld data-enhanced="true" of data-enhanced="formulier-3" te geven.
         // Data attributen mag je zelf verzinnen: https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Solve_HTML_problems/Use_data_attributes
-        if (!form.hasAttribute('data-enhanced')) return;
+        if (!form.hasAttribute('data-enhanced')) {
+            return
+        }
 
         // Voorkom de standaard submit van de browser
         // Let op: hiermee overschrijven we de default Loading state van de browser...
         event.preventDefault();
+
+        const button = form.querySelector('button[type="submit"]')
+
+        // Loading state
+        button.classList.add('loading')
+        button.textContent = 'Antwoord controleren ...'
+        button.disabled = true
 
         // Verzamel alle formuliervelden van het formulier
         let formData = new FormData(form);
@@ -244,12 +258,9 @@
         // Inclusief alle formuliervelden
         const response = await fetch(form.action, {
             method: form.method,
-            body: new URLSearchParams(formData),
-            redirect: 'follow'
+            body: new URLSearchParams(formData)
         });
-
-        console.log('response url:', response.url)
-
+        
         // De server redirect op de normale manier, en geeft HTML terug
         // (De server weet niet eens dat deze fetch via client-side JavaScript gebeurde)
         const responseText = await response.text();
@@ -264,16 +275,17 @@
         // In de nieuwe HTML zoeken we bijvoorbeeld naar data-enhanced="true" of data-enhanced="formulier-3"
         // (Hierdoor kunnen we ook meerdere formulieren op dezelfde pagina gebruiken)
         const newState = responseDOM.querySelector('[data-enhanced="' + form.getAttribute('data-enhanced') + '"]');
-        console.log('zoek naar:', '[data-enhanced="' + form.getAttribute('data-enhanced') + '"]')
-        console.log('newState:', newState)
-        console.log('newState innerHTML:', newState.innerHTML)
+
+        // Pak attempt_id uit nieuwe HTML en update alle andere forms op de pagina
+        const newAttemptId = newState.querySelector('[name="attempt_id"]')?.value
+
+        if (newAttemptId) {
+            document.querySelectorAll('[name="attempt_id"]').forEach(input => input.value = newAttemptId)
+        }
+        
         // Overschrijf ons formulier met de nieuwe HTML
         // Hier wil je waarschijnlijk de Loading state vervangen door een Success state
-        const currentCard = document.querySelector('[data-enhanced="' + form.getAttribute('data-enhanced') + '"]');
-        currentCard.replaceWith(newState);
-
-        console.log('currentCard:', currentCard)
-
+        form.outerHTML = newState.outerHTML
     });
 
 </script>

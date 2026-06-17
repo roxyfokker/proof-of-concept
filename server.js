@@ -137,7 +137,7 @@ app.post('/quiz-submit', async function (request, response) {
       total_questions: answers.length
     })
   })
-  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${request.body.attempt_id}&completed=true&score=${score}`)
+  response.redirect(`/exhibit/${request.body.exhibit_slug}?attempt_id=${request.body.attempt_id}&completed=true&score=${score}#quiz-results`)
 })
 
 app.get('/niet-beschikbaar', async function (request, response) {

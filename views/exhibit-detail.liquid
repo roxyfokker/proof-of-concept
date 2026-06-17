@@ -213,7 +213,7 @@
 
     {% if completed == "true" %}
 
-        <section class="quiz-results">
+        <section class="quiz-results" id="quiz-results">
             <h3>Quiz afgerond!</h3>
             
             <div class="score">
@@ -318,6 +318,9 @@
         // Overschrijf ons formulier met de nieuwe HTML
         // Hier wil je waarschijnlijk de Loading state vervangen door een Success state
         form.outerHTML = newState.outerHTML
+
+        // forced repaint want soms werden de befoer/after van de quiz h3 niet meer getkeend 
+        document.body.offsetHeight
     });
 
 </script>

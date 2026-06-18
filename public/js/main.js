@@ -32,12 +32,13 @@ document.addEventListener('keydown', function (e) {
 document.querySelectorAll('.img-wrapper').forEach(wrapper => {
     const img = wrapper.querySelector('img');
     const spinner = wrapper.querySelector('.spinner');
-    const remove = () => spinner?.remove();
-
-    if (img?.complete) {
-        remove();
+    
+     if (img.complete) {
+        spinner.style.display = 'none';
     } else {
-        img?.addEventListener('load', remove);
+        img.addEventListener('load', () => {
+            spinner.style.display = 'none';
+        });
     }
 });
 

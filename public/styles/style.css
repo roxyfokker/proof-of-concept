@@ -728,23 +728,6 @@ main{
     }
 }
 /*-----------------article------------------*/
-.timeline{
-    padding-top: var(--spacing-3xl);
-    @media (min-width: 900px){
-        display: grid;
-        grid-template-columns: 1fr 3fr;
-        .timeline-article{
-            border-left: var(--color-neutral-darker) solid var(--border-width-lg);
-            padding-left: var(--spacing-lg);
-            padding-right: var(--spacing-lg);
-        }
-        .table-of-content{
-            position: sticky;
-            top: 1rem;
-            align-self: start;
-        }
-    }
-}
 .timeline-article{
     margin-left: var(--spacing-lg);
     margin-right: var(--spacing-lg);
@@ -960,6 +943,77 @@ main{
         
     }
 }
+/*responsive vnaaf 1200 met grid*/
+.timeline{
+    padding-top: var(--spacing-3xl);
+    @media (min-width: 900px){
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        .timeline-article{
+            border-left: var(--color-neutral-darker) solid var(--border-width-lg);
+            padding-left: var(--spacing-lg);
+            padding-right: var(--spacing-lg);
+        }
+        .table-of-content{
+            position: sticky;
+            top: 1rem;
+            align-self: start;
+        }
+    }
+    @media (min-width: 1200px){
+        display: grid;
+        grid-template-columns: 1fr 3fr 2fr;
+        align-items: start;
+        padding: var(--spacing-lg);
+
+        .table-of-content {
+            grid-column: 1;
+        }
+
+        .timeline-article {
+            grid-column: 2;
+            .timeline-article-section{
+                margin-bottom: var(--spacing-2xl);
+            }
+        }
+
+        .quiz-sidebar {
+            grid-column: 3;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            .question-card{
+                background-color: var(--color-secondary);
+                color: var(--color-neutral-darker);
+                border-left: solid var(--color-accent) var(--border-width-2xl);
+                padding: var(--spacing-2xl);
+                margin-bottom: var(--spacing-2xl);
+                h3{
+                    display: none;
+                }
+                .option{
+                    border-color: var(--color-neutral-darker);
+                    .option-key{
+                        background-color: var(--color-neutral-darker);
+                        color: var(--color-secondary);
+                    }
+                }
+                .feedback-message{
+                    color: var(--color-secondary);
+                    p{
+                        font-size: var(--font-size-body-sm);
+                    }
+                    
+                }
+                .hint::before{
+                    filter: brightness(0);
+                }
+            }
+            
+        }
+    }
+}
+
 @keyframes expand {
     from {
         height: 0;

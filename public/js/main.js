@@ -42,7 +42,7 @@ document.querySelectorAll('.img-wrapper').forEach(wrapper => {
 });
 
 
-// table of content 
+// table of content -> uit deze bronnen eigenlijk te moeilijk voor mij 
 // https://benfrain.com/building-a-table-of-contents-with-active-indicator-using-javascript-intersection-observers/
 // https://css-tricks.com/a-few-functional-uses-for-intersection-observer-to-know-when-an-element-is-in-view/
 if ('IntersectionObserver' in window) {
@@ -59,4 +59,18 @@ if ('IntersectionObserver' in window) {
     }, { threshold: 0.3 },{ rootMargin: "0px 0px -200px 0px"})
 
     sections.forEach(section => observer.observe(section))
+}
+
+// quiz question uit article halen en in nieuw elemnt zetten 
+if (window.matchMedia('(min-width: 1200px)').matches) {
+    const timelineArticle = document.querySelector('.timeline')
+    const quizSection = document.createElement('section')
+
+    quizSection.classList.add('quiz-sidebar')
+    timelineArticle.appendChild(quizSection)
+
+    document.querySelectorAll('.question-card').forEach(card => {
+        quizSection.appendChild(card)
+    })
+
 }

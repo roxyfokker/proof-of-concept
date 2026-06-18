@@ -945,7 +945,7 @@ main{
 }
 /*responsive vnaaf 1200 met grid*/
 .timeline{
-    padding-top: var(--spacing-3xl);
+    margin-top: var(--spacing-3xl);
     @media (min-width: 900px){
         display: grid;
         grid-template-columns: 1fr 3fr;

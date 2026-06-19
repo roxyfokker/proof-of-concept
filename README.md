@@ -48,7 +48,19 @@ componenten in kaart brengen link
 -> code conventies
 
 ## Installatie
-<!-- Bij Instalatie staat hoe een andere developer aan jouw repo kan werken -->
+
+1. Ga naar [nodejs.org](https://nodejs.org) en installeer **Node.js 24.13.0 LTS** (Long Term Support).
+2. Fork de repository en open het project in VSCodium.
+3. Open de terminal in VSCodium en voer het volgende commando uit:
+```bash
+   npm install
+```
+4. Start het project met:
+```bash
+   npm start
+```
+   Het project is nu bereikbaar op **http://localhost:8000**.
+5. Wanneer je klaar bent, stop je de server met **Control + C** in de terminal.
 
 ## Bronnen
 

@@ -38,6 +38,8 @@ Na het controleren van het antwoord krijgt de gebruiker directe feedback: de kaa
 
 Met JavaScript wordt de paginaverversing onderschept. De knop toont een laadstaat ("Antwoord controleren…") terwijl het antwoord wordt verwerkt, en alleen de quizcard zelf wordt vervangen zonder dat de rest van de pagina herlaadt. Het `attempt_id` dat bij het eerste antwoord wordt aangemaakt, wordt daarna meteen in alle andere formulieren op de pagina gezet zodat alles bij dezelfde poging hoort.
 
+<img width="2644" height="753" alt="image" src="https://github.com/user-attachments/assets/f187ba26-63d6-4ae9-91dc-462c5e21f644" />
+
 #### Server — quiz-answer
  
 Bij het eerste antwoord van een gebruiker bestaat er nog geen `attempt_id`. De server maakt dan eerst een nieuwe poging aan in de database en gebruikt het teruggegeven id voor de rest van de sessie. Daarna worden de vraagopties opgehaald om te controleren of het gekozen antwoord correct is:
@@ -94,6 +96,8 @@ De resultaten worden getoond als percentage én als `x van y vragen goed`, via e
 {% endif %}
 ```
 Met JavaScript wordt ook de resultatenweergave client-side afgehandeld: de knop toont "Score berekenen…" als laadstaat, en na de server-response wordt alleen het resultatenblok op de pagina vervangen zonder refresh.
+
+<img width="1738" height="406" alt="image" src="https://github.com/user-attachments/assets/ce71d147-5368-4cdd-8d95-2ec8cd0e464e" />
 
 #### Server — quiz-submit
  
